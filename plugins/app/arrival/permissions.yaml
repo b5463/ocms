@@ -1,0 +1,8 @@
+---
+tab: Arrivals
+label: Manage Arrivals
+order: 1000
+permissions:
+    app.arrival.access_arrivals:
+        label: Manage Arrivals
+        tab: Arrivals

@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Arrival
+
+# Model Form Field configuration
+form: $/app/arrival/models/arrival/fields.yaml
+
+# Model Class name
+modelClass: App\Arrival\Models\Arrival
+
+# Default redirect location
+defaultRedirect: app/arrival/arrivals
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: app/arrival/arrivals/update/:id
+    redirectClose: app/arrival/arrivals
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: app/arrival/arrivals
+    redirectClose: app/arrival/arrivals
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

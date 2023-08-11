@@ -1,0 +1,22 @@
+<?php Block::put('breadcrumb') ?>
+    <!-- Breadcrumb navigation -->
+    <ul>
+        <li><a href="<?= Backend::url('app/arrival/arrivals') ?>">Arrivals</a></li>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut() ?>
+
+<?php if (!$this->fatalError): ?>
+
+    <!-- Form preview section -->
+    <div class="form-preview">
+        <?= $this->formRenderPreview() ?>
+    </div>
+
+<?php else: ?>
+
+    <!-- Display error message and link to return to arrivals list -->
+    <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+    <p><a href="<?= Backend::url('app/arrival/arrivals') ?>" class="btn btn-default">Return to arrivals list</a></p>
+
+<?php endif ?>
