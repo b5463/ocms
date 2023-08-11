@@ -114,6 +114,8 @@ return [
 
         // Core Service Provider
         System\ServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        Illuminate\Auth\AuthServiceProvider::class,
 
         // Package Service Providers...
         // Illuminate\Html\HtmlServiceProvider::class, // Example

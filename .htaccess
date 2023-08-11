@@ -1,4 +1,5 @@
 <IfModule mod_rewrite.c>
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     <IfModule mod_negotiation.c>
         Options -MultiViews

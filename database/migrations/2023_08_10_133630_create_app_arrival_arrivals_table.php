@@ -12,6 +12,7 @@ class CreateAppArrivalArrivalsTable extends Migration
             $table->id();
             $table->string('name');
             $table->timestamp('arrival');
+            $table->integer('user_id')->nullable();
             $table->timestamps();
         });
     }

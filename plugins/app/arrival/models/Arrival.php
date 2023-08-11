@@ -3,10 +3,16 @@
 namespace App\Arrival\Models;
 
 use Model;
-use RainLab\User\Models\User; // Make sure this path is correct
 
 /**
  * Arrival Model
+ *
+ * @property int $id
+ * @property string $name
+ * @property \Carbon\Carbon $arrival
+ * @property int|null $user_id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  */
 class Arrival extends Model
 {
@@ -34,7 +40,10 @@ class Arrival extends Model
     /**
      * @var array Fillable fields
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'arrival',
+    ];
 
     /**
      * @var array Validation rules for attributes

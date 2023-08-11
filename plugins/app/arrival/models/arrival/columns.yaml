@@ -10,4 +10,6 @@ columns:
         label: name
     arrival:
         type: datetime
+    user_id:
+        label: user_id
         

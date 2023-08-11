@@ -10,3 +10,5 @@ fields:
         label: name
     arrival:
         type: datepicker
+    user_id:
+        label: user_id

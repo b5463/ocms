@@ -84,7 +84,7 @@ class Plugin extends PluginBase
                 'arrival' => [
                     'label'       => 'Arrival',
                     'url'         => Backend::url('app/arrival/arrivals'),
-                    'icon'        => 'icon-calendar',
+                    'icon'        => 'icon-clock-o',
                     'permissions' => ['app.arrival.*'],
                     'order'       => 500,
                 ],

@@ -9,7 +9,8 @@
         "october/rain": "^3.4",
         "laravel/framework": "^9.0",
         "october/all": "^3.4",
-        "rainlab/user-plugin": "^2.1"
+        "rainlab/user-plugin": "^2.1",
+        "tymon/jwt-auth": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0"
