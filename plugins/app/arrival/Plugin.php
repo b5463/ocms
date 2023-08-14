@@ -46,18 +46,6 @@ class Plugin extends PluginBase
     }
 
     /**
-     * Registers any front-end components implemented in this plugin.
-     *
-     * @return array
-     */
-    public function registerComponents()
-    {
-        return [
-            'App\Arrival\Components\MyComponent' => 'myComponent', // Register your front-end component
-        ];
-    }
-
-    /**
      * Registers any back-end permissions used by this plugin.
      *
      * @return array
