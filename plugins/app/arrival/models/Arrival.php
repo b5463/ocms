@@ -1,19 +1,11 @@
 <?php
 
 namespace App\Arrival\Models;
+use App\Arrival\Http\Events\ArrivalCreated;
 
 use Model;
+use LibUser\Userapi\Models\User;
 
-/**
- * Arrival Model
- *
- * @property int $id
- * @property string $name
- * @property \Carbon\Carbon $arrival
- * @property int|null $user_id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- */
 class Arrival extends Model
 {
     use \October\Rain\Database\Traits\Validation;
@@ -29,8 +21,8 @@ class Arrival extends Model
      * @var array
      */
     public $belongsTo = [
-        'user' => [User::class] // Assuming 'User' model is imported correctly
-    ];
+        'user' => [User::class]
+    ];    
 
     /**
      * @var array Guarded fields
@@ -61,6 +53,15 @@ class Arrival extends Model
     protected $jsonable = [];
 
     /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => ArrivalCreated::class,
+    ];
+
+    /**
      * @var array Attributes to be appended to the API representation of the model (ex. toArray())
      */
     protected $appends = [];
@@ -81,14 +82,5 @@ class Arrival extends Model
     /**
      * @var array Relations
      */
-    public $hasOne = [];
-    public $hasMany = [];
-    public $hasOneThrough = [];
-    public $hasManyThrough = [];
-    public $belongsToMany = [];
-    public $morphTo = [];
-    public $morphOne = [];
-    public $morphMany = [];
     public $attachOne = [];
-    public $attachMany = [];
 }
