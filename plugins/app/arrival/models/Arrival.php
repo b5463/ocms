@@ -22,7 +22,7 @@ class Arrival extends Model
      */
     public $belongsTo = [
         'user' => [User::class]
-    ];    
+    ];      
 
     /**
      * @var array Guarded fields
@@ -83,7 +83,6 @@ class Arrival extends Model
      * @var array Relations
      */
     public $hasOne = [];
-    public $hasMany = [];
     public $hasOneThrough = [];
     public $hasManyThrough = [];
     public $belongsToMany = [];
