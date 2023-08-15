@@ -10,7 +10,6 @@ use October\Rain\Auth\Models\User as UserBase;
 use RainLab\User\Models\Settings as UserSettings;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use October\Rain\Auth\AuthException;
-use App\Arrival\Models\Arrival;
 
 class User extends UserBase
 {
@@ -20,10 +19,6 @@ class User extends UserBase
      * @var string The database table used by the model.
      */
     protected $table = 'users';
-
-    public $hasMany = [
-        'arrivals' => [Arrival::class, 'key' => 'user_id']
-    ];
 
     /**
      * Validation rules

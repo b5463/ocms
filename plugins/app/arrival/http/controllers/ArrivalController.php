@@ -56,7 +56,7 @@ class ArrivalController extends Controller
     {
         try {
             $user = auth()->user();
-
+            
             // Fetch user's arrivals using the hasMany relationship
             $usersArrivals = $user->arrivals;
 
