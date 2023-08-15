@@ -35,10 +35,4 @@ return [
          */
         'suspensionTime' => 15,
     ],    
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => LibUser\Userapi\Models\User::class,
-        ],
-    ],
 ];

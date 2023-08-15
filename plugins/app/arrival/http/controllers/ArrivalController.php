@@ -1,59 +1,76 @@
 <?php
+
 namespace App\Arrival\Http\Controllers;
 
 use App\Arrival\Models\Arrival;
 use Backend\Classes\Controller;
 use App\Arrival\Http\Resources\ArrivalResource;
-use Illuminate\Support\Facades\Event; // Make sure to import Event class
-use Illuminate\Http\Request;
+use Event;
+use Illuminate\Http\Request; // Make sure to include the necessary request class
 
 class ArrivalController extends Controller
 {
     /**
-     * Get a collection of all arrivals.
+     * Retrieve a collection of all arrivals.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        return ArrivalResource::collection(Arrival::all());
+        try {
+            $arrivals = ArrivalResource::collection(Arrival::all());
+            return response()->json($arrivals);
+        } catch (\Exception $e) {
+            return $this->errorResponse('An error occurred while fetching arrivals.', 500);
+        }
     }
 
     /**
      * Store a new arrival record.
      *
      * @param Request $request
-     * @return ArrivalResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         try {
             $arrival = new Arrival();
-            $arrival->name = $request->input('name');
-            $arrival->arrival = $request->input('arrival');
+            $arrival->user_id = auth()->user()->id;
+            $arrival->name = auth()->user()->name;
+            $arrival->arrival = now();
             $arrival->save();
-
-            return new ArrivalResource($arrival);
+            
+            return response()->json(new ArrivalResource($arrival));
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while creating the arrival: ' . $e->getMessage()], 500);
+            return $this->errorResponse('An error occurred while storing the arrival: ' . $e, 500);
         }
     }
 
-
     /**
-     * Get a collection of arrivals for the authenticated user.
+     * Retrieve arrivals for the authenticated user.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getUsersArrivals()
     {
         try {
-            $allArrivals = Arrival::all();
-            Event::dispatch('App.Arrival.userArrivalsRequested', [$allArrivals]);
-    
-            return ArrivalResource::collection($allArrivals);
+            $usersArrivals = Arrival::where('user_id', auth()->user()->id)->get();
+            Event::fire('App.Arrival.userArrivalsRequested', [$usersArrivals]);
+            return response()->json(ArrivalResource::collection($usersArrivals));
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while fetching arrivals.'], 500);
+            return $this->errorResponse('An error occurred while fetching user arrivals: ' . $e, 500);
         }
-    }  
+    }
+
+    /**
+     * Helper method for returning error responses.
+     *
+     * @param mixed $message
+     * @param int $statusCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function errorResponse($message, $statusCode)
+    {
+        return response()->json(['error' => $message], $statusCode);
+    }
 }
