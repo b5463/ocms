@@ -86,7 +86,6 @@ class Arrival extends Model
     public $hasMany = [];
     public $hasOneThrough = [];
     public $hasManyThrough = [];
-    public $hasMany = [];
     public $belongsToMany = [];
     public $morphTo = [];
     public $morphOne = [];

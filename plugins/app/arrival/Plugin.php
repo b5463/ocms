@@ -4,7 +4,7 @@ namespace App\Arrival;
 
 use Backend;
 use System\Classes\PluginBase;
-use RainLab\User\Models\User as RainLabUser;
+use App\Arrival\Classes\Extend\UserExtend;
 
 /**
  * Arrival Plugin Information File
@@ -43,10 +43,7 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
-        RainLabUser::extend(function ($model) {
-            // Add the $hasMany relationship to the Arrival model
-            $model->hasMany['arrivals'] = ['App\Arrival\Models\Arrival', 'key' => 'user_id'];
-        });
+        UserExtend::extendUser_addArrivalsRelation();
     }
 
     /**
