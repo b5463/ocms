@@ -1,0 +1,21 @@
+<?php Block::put('breadcrumb') ?>
+    <ul>
+        <li><a href="<?= Backend::url('teamgrid/project/projects') ?>">Projects</a></li>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut() ?>
+
+<?php if (!$this->fatalError): ?>
+
+    <!-- Form Preview Section -->
+    <div class="form-preview">
+        <?= $this->formRenderPreview() ?>
+    </div>
+
+<?php else: ?>
+
+    <!-- Error Message Section -->
+    <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+    <p><a href="<?= Backend::url('teamgrid/project/projects') ?>" class="btn btn-default">Return to projects</a></p>
+
+<?php endif ?>

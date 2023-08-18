@@ -3,13 +3,11 @@
 use App;
 use Illuminate\Routing\Redirector;
 
-/**
- * UserRedirector
- */
 class UserRedirector extends Redirector
 {
     /**
-     * guest creates a new redirect response, while putting the current URL in the session.
+     * Create a new redirect response, while putting the current URL in the session.
+     *
      * @param  string  $path
      * @param  int     $status
      * @param  array   $headers
@@ -18,17 +16,15 @@ class UserRedirector extends Redirector
      */
     public function guest($path, $status = 302, $headers = [], $secure = null)
     {
-        $sessionKey = App::runningInBackend()
-            ? 'url.intended'
-            : 'url.cms.intended';
-
+        $sessionKey = App::runningInBackend() ? 'url.intended' : 'url.frontend.intended';
         $this->session->put($sessionKey, $this->generator->full());
 
         return $this->to($path, $status, $headers, $secure);
     }
 
     /**
-     * intended creates a new redirect response to the previously intended location.
+     * Create a new redirect response to the previously intended location.
+     *
      * @param  string  $default
      * @param  int     $status
      * @param  array   $headers
@@ -37,10 +33,7 @@ class UserRedirector extends Redirector
      */
     public function intended($default = '/', $status = 302, $headers = [], $secure = null)
     {
-        $sessionKey = App::runningInBackend()
-            ? 'url.intended'
-            : 'url.cms.intended';
-
+        $sessionKey = App::runningInBackend() ? 'url.intended' : 'url.frontend.intended';
         $path = $this->session->pull($sessionKey, $default);
 
         return $this->to($path, $status, $headers, $secure);

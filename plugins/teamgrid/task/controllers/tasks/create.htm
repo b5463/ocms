@@ -1,0 +1,46 @@
+<?php Block::put('breadcrumb'); ?>
+    <ul>
+        <li><a href="<?= Backend::url('teamgrid/task/tasks') ?>">Tasks</a></li>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut(); ?>
+
+<?php if (!$this->fatalError): ?>
+    <div class="form-container">
+        <?= Form::open(['class' => 'layout']); ?>
+        
+            <div class="form-group">
+                <?= $this->formRender(); ?>
+            </div>
+        
+            <div class="form-buttons">
+                <div class="loading-indicator-container">
+                    <button
+                        type="submit"
+                        data-request="onSave"
+                        data-hotkey="ctrl+s, cmd+s"
+                        data-load-indicator="Creating Task..."
+                        class="btn btn-primary">
+                        Create
+                    </button>
+                    <button
+                        type="button"
+                        data-request="onSave"
+                        data-request-data="close:1"
+                        data-hotkey="ctrl+enter, cmd+enter"
+                        data-load-indicator="Creating Task..."
+                        class="btn btn-default">
+                        Create and Close
+                    </button>
+                    <span class="btn-text">or <a href="<?= Backend::url('teamgrid/task/tasks') ?>">Cancel</a></span>
+                </div>
+            </div>
+        
+        <?= Form::close(); ?>
+    </div>
+<?php else: ?>
+    <div class="error-message">
+        <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+        <p><a href="<?= Backend::url('teamgrid/task/tasks') ?>" class="btn btn-default">Return to tasks list</a></p>
+    </div>
+<?php endif; ?>

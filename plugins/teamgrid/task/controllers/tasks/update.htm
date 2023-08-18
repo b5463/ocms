@@ -1,0 +1,71 @@
+<?php
+// Display breadcrumb navigation
+Block::put('breadcrumb');
+?>
+<ul>
+    <li><a href="<?= Backend::url('teamgrid/task/tasks') ?>">Tasks</a></li>
+    <li><?= e($this->pageTitle) ?></li>
+</ul>
+<?php
+Block::endPut();
+?>
+
+<?php if (!$this->fatalError): ?>
+    <!-- Form for creating/updating a task -->
+    <?= Form::open(['class' => 'layout']) ?>
+
+        <!-- Form fields -->
+        <div class="layout-row">
+            <?= $this->formRender() ?>
+        </div>
+
+        <!-- Form action buttons -->
+        <div class="form-buttons">
+            <div class="loading-indicator-container">
+                <!-- Save button -->
+                <button
+                    type="submit"
+                    data-request="onSave"
+                    data-request-data="redirect:0"
+                    data-hotkey="ctrl+s, cmd+s"
+                    data-load-indicator="Saving Task..."
+                    class="btn btn-primary">
+                    <u>S</u>ave
+                </button>
+
+                <!-- Save and Close button -->
+                <button
+                    type="button"
+                    data-request="onSave"
+                    data-request-data="close:1"
+                    data-hotkey="ctrl+enter, cmd+enter"
+                    data-load-indicator="Saving Task..."
+                    class="btn btn-default">
+                    Save and Close
+                </button>
+
+                <!-- Delete button -->
+                <button
+                    type="button"
+                    class="oc-icon-trash-o btn-icon danger pull-right"
+                    data-request="onDelete"
+                    data-load-indicator="Deleting Task..."
+                    data-request-confirm="Delete this task?">
+                </button>
+
+                <!-- Cancel link -->
+                <span class="btn-text">
+                    or <a href="<?= Backend::url('teamgrid/task/tasks') ?>">Cancel</a>
+                </span>
+            </div>
+        </div>
+
+    <?= Form::close() ?>
+
+<?php else: ?>
+    <!-- Display error message and return link -->
+    <div class="error-message">
+        <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+        <p><a href="<?= Backend::url('teamgrid/task/tasks') ?>" class="btn btn-default">Return to tasks list</a></p>
+    </div>
+<?php endif; ?>

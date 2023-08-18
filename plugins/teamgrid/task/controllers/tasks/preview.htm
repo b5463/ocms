@@ -1,0 +1,38 @@
+<?php
+// Define breadcrumb for navigation
+Block::put('breadcrumb');
+?>
+<ul>
+    <li><a href="<?= Backend::url('teamgrid/task/tasks') ?>">Tasks</a></li>
+    <li><?= e($this->pageTitle) ?></li>
+</ul>
+<?php
+Block::endPut();
+?>
+
+<?php if (!$this->fatalError): ?>
+    <div class="form-preview">
+        <?= $this->formRenderPreview(); ?>
+    </div>
+<?php else: ?>
+    <div class="error-message">
+        <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+        <p><a href="<?= Backend::url('teamgrid/task/tasks') ?>" class="btn btn-default">Return to tasks list</a></p>
+    </div>
+<?php endif; ?>
+
+<?php
+// Add more comments to explain the code below
+if (!$this->fatalError) {
+    // Display the form preview when no fatal error
+    echo '<div class="form-preview">';
+    echo $this->formRenderPreview();
+    echo '</div>';
+} else {
+    // Display error message and return link in case of a fatal error
+    echo '<div class="error-message">';
+    echo '<p class="flash-message static error">' . e($this->fatalError) . '</p>';
+    echo '<p><a href="' . Backend::url('teamgrid/task/tasks') . '" class="btn btn-default">Return to tasks list</a></p>';
+    echo '</div>';
+}
+?>

@@ -6,17 +6,16 @@ use Mail;
 use Event;
 use Flash;
 use Input;
-use System;
 use Request;
 use Redirect;
 use Validator;
+use ValidationException;
+use ApplicationException;
 use October\Rain\Auth\AuthException;
 use Cms\Classes\Page;
 use Cms\Classes\ComponentBase;
 use RainLab\User\Models\User as UserModel;
 use RainLab\User\Models\Settings as UserSettings;
-use ApplicationException;
-use ValidationException;
 use Exception;
 
 /**
@@ -27,52 +26,46 @@ use Exception;
  */
 class Account extends ComponentBase
 {
-    /**
-     * componentDetails
-     */
     public function componentDetails()
     {
         return [
-            'name' => /*Account*/'rainlab.user::lang.account.account',
+            'name'        => /*Account*/'rainlab.user::lang.account.account',
             'description' => /*User management form.*/'rainlab.user::lang.account.account_desc'
         ];
     }
 
-    /**
-     * defineProperties
-     */
     public function defineProperties()
     {
         return [
             'redirect' => [
-                'title' => /*Redirect to*/'rainlab.user::lang.account.redirect_to',
+                'title'       => /*Redirect to*/'rainlab.user::lang.account.redirect_to',
                 'description' => /*Page name to redirect to after update, sign in or registration.*/'rainlab.user::lang.account.redirect_to_desc',
-                'type' => 'dropdown',
-                'default' => ''
+                'type'        => 'dropdown',
+                'default'     => ''
             ],
             'paramCode' => [
-                'title' => /*Activation Code Param*/'rainlab.user::lang.account.code_param',
+                'title'       => /*Activation Code Param*/'rainlab.user::lang.account.code_param',
                 'description' => /*The page URL parameter used for the registration activation code*/ 'rainlab.user::lang.account.code_param_desc',
-                'type' => 'string',
-                'default' => 'code'
+                'type'        => 'string',
+                'default'     => 'code'
             ],
             'activationPage' => [
-                'title' => /* Activation Page */'rainlab.user::lang.account.activation_page',
+                'title'       => /* Activation Page */'rainlab.user::lang.account.activation_page',
                 'description' => /* Select a page to use for activating the user account */'rainlab.user::lang.account.activation_page_comment',
-                'type' => 'dropdown',
-                'default' => ''
+                'type'        => 'dropdown',
+                'default'     => ''
             ],
             'forceSecure' => [
-                'title' => /*Force secure protocol*/'rainlab.user::lang.account.force_secure',
+                'title'       => /*Force secure protocol*/'rainlab.user::lang.account.force_secure',
                 'description' => /*Always redirect the URL with the HTTPS schema.*/'rainlab.user::lang.account.force_secure_desc',
-                'type' => 'checkbox',
-                'default' => 0
+                'type'        => 'checkbox',
+                'default'     => 0
             ],
             'requirePassword' => [
-                'title' => /*Confirm password on update*/'rainlab.user::lang.account.update_requires_password',
+                'title'       => /*Confirm password on update*/'rainlab.user::lang.account.update_requires_password',
                 'description' => /*Require the current password of the user when changing their profile.*/'rainlab.user::lang.account.update_requires_password_comment',
-                'type' => 'checkbox',
-                'default' => 0
+                'type'        => 'checkbox',
+                'default'     => 0
             ],
         ];
     }
@@ -116,12 +109,16 @@ class Account extends ComponentBase
      */
     public function onRun()
     {
-        // Redirect to HTTPS checker
+        /*
+         * Redirect to HTTPS checker
+         */
         if ($redirect = $this->redirectForceSecure()) {
             return $redirect;
         }
 
-        // Activation code supplied
+        /*
+         * Activation code supplied
+         */
         if ($code = $this->activationCode()) {
             $this->onActivate($code);
         }
@@ -173,7 +170,7 @@ class Account extends ComponentBase
     }
 
     /**
-     * updateRequiresPassword returns the update requires password setting
+     * Returns the update requires password setting
      */
     public function updateRequiresPassword()
     {
@@ -181,7 +178,7 @@ class Account extends ComponentBase
     }
 
     /**
-     * rememberLoginMode returns the login remember mode.
+     * Returns the login remember mode.
      */
     public function rememberLoginMode()
     {
@@ -206,7 +203,7 @@ class Account extends ComponentBase
     }
 
     /**
-     * activationCode looks for the activation code from the URL parameter. If nothing
+     * Looks for the activation code from the URL parameter. If nothing
      * is found, the GET parameter 'activate' is used instead.
      * @return string
      */
@@ -226,13 +223,15 @@ class Account extends ComponentBase
     //
 
     /**
-     * onSignin signs in the user
+     * Sign in the user
      */
     public function onSignin()
     {
         try {
-            // Validate input
-            $data = (array) post();
+            /*
+             * Validate input
+             */
+            $data = post();
             $rules = [];
 
             $rules['login'] = $this->loginAttribute() == UserSettings::LOGIN_USERNAME
@@ -258,9 +257,11 @@ class Account extends ComponentBase
                 throw new ValidationException($validation);
             }
 
-            // Authenticate user
+            /*
+             * Authenticate user
+             */
             $credentials = [
-                'login' => array_get($data, 'login'),
+                'login'    => array_get($data, 'login'),
                 'password' => array_get($data, 'password')
             ];
 
@@ -272,23 +273,28 @@ class Account extends ComponentBase
                 throw new AuthException(Lang::get(/*Sorry, this user is currently not activated. Please contact us for further assistance.*/'rainlab.user::lang.account.banned'));
             }
 
-            // Record IP address
+            /*
+             * Record IP address
+             */
             if ($ipAddress = Request::ip()) {
                 $user->touchIpAddress($ipAddress);
             }
 
-            // Redirect
+            /*
+             * Redirect
+             */
             if ($redirect = $this->makeRedirection(true)) {
                 return $redirect;
             }
         }
         catch (Exception $ex) {
-            $this->throwOrFlashError($ex);
+            if (Request::ajax()) throw $ex;
+            else Flash::error($ex->getMessage());
         }
     }
 
     /**
-     * onRegister registers the user
+     * Register the user
      */
     public function onRegister()
     {
@@ -301,8 +307,10 @@ class Account extends ComponentBase
                 throw new ApplicationException(Lang::get(/*Registration is throttled. Please try again later.*/'rainlab.user::lang.account.registration_throttled'));
             }
 
-            // Validate input
-            $data = (array) post();
+            /*
+             * Validate input
+             */
+            $data = post();
 
             if (!array_key_exists('password_confirmation', $data)) {
                 $data['password_confirmation'] = post('password');
@@ -325,12 +333,16 @@ class Account extends ComponentBase
                 throw new ValidationException($validation);
             }
 
-            // Record IP address
+            /*
+             * Record IP address
+             */
             if ($ipAddress = Request::ip()) {
                 $data['created_ip_address'] = $data['last_ip_address'] = $ipAddress;
             }
 
-            // Register user
+            /*
+             * Register user
+             */
             Event::fire('rainlab.user.beforeRegister', [&$data]);
 
             $requireActivation = UserSettings::get('require_activation', true);
@@ -341,7 +353,9 @@ class Account extends ComponentBase
 
             Event::fire('rainlab.user.register', [$user, $data]);
 
-            // Activation is by the user, send the email
+            /*
+             * Activation is by the user, send the email
+             */
             if ($userActivation) {
                 $this->sendActivationEmail($user);
 
@@ -350,30 +364,37 @@ class Account extends ComponentBase
 
             $intended = false;
 
-            // Activation is by the admin, show message
-            // For automatic email on account activation RainLab.Notify plugin is needed
+            /*
+             * Activation is by the admin, show message
+             * For automatic email on account activation RainLab.Notify plugin is needed
+             */
             if ($adminActivation) {
                 Flash::success(Lang::get(/*You have successfully registered. Your account is not yet active and must be approved by an administrator.*/'rainlab.user::lang.account.activation_by_admin'));
             }
 
-            // Automatically activated or not required, log the user in
+            /*
+             * Automatically activated or not required, log the user in
+             */
             if ($automaticActivation || !$requireActivation) {
                 Auth::login($user, $this->useRememberLogin());
                 $intended = true;
             }
 
-            // Redirect to the intended page after successful sign in
+            /*
+             * Redirect to the intended page after successful sign in
+             */
             if ($redirect = $this->makeRedirection($intended)) {
                 return $redirect;
             }
         }
         catch (Exception $ex) {
-            $this->throwOrFlashError($ex);
+            if (Request::ajax()) throw $ex;
+            else Flash::error($ex->getMessage());
         }
     }
 
     /**
-     * onActivate activates the user
+     * Activate the user
      * @param  string $code Activation code
      */
     public function onActivate($code = null)
@@ -383,7 +404,9 @@ class Account extends ComponentBase
 
             $errorFields = ['code' => Lang::get(/*Invalid activation code supplied.*/'rainlab.user::lang.account.invalid_activation_code')];
 
-            // Break up the code parts
+            /*
+             * Break up the code parts
+             */
             $parts = explode('!', $code);
             if (count($parts) != 2) {
                 throw new ValidationException($errorFields);
@@ -405,11 +428,15 @@ class Account extends ComponentBase
 
             Flash::success(Lang::get(/*Successfully activated your account.*/'rainlab.user::lang.account.success_activation'));
 
-            // Sign in the user
+            /*
+             * Sign in the user
+             */
             Auth::login($user, $this->useRememberLogin());
+
         }
         catch (Exception $ex) {
-            $this->throwOrFlashError($ex);
+            if (Request::ajax()) throw $ex;
+            else Flash::error($ex->getMessage());
         }
     }
 
@@ -422,7 +449,7 @@ class Account extends ComponentBase
             return;
         }
 
-        $data = (array) post();
+        $data = post();
 
         if ($this->updateRequiresPassword()) {
             if (!$user->checkHashValue('password', $data['password_current'])) {
@@ -437,17 +464,23 @@ class Account extends ComponentBase
         $user->fill($data);
         $user->save();
 
-        // Password has changed, reauthenticate the user
+        /*
+         * Password has changed, reauthenticate the user
+         */
         if (array_key_exists('password', $data) && strlen($data['password'])) {
             Auth::login($user->reload(), $this->useRememberLogin());
         }
 
-        // Update Event to hook into the plugins function
+        /*
+         * Update Event to hook into the plugins function
+         */
         Event::fire('rainlab.user.update', [$user, $data]);
 
         Flash::success(post('flash', Lang::get(/*Settings successfully saved!*/'rainlab.user::lang.account.success_saved')));
 
-        // Redirect
+        /*
+         * Redirect
+         */
         if ($redirect = $this->makeRedirection()) {
             return $redirect;
         }
@@ -473,7 +506,9 @@ class Account extends ComponentBase
 
         Flash::success(post('flash', Lang::get(/*Successfully deactivated your account. Sorry to see you go!*/'rainlab.user::lang.account.success_deactivation')));
 
-        // Redirect
+        /*
+         * Redirect
+         */
         if ($redirect = $this->makeRedirection()) {
             return $redirect;
         }
@@ -496,12 +531,16 @@ class Account extends ComponentBase
             Flash::success(Lang::get(/*An activation email has been sent to your email address.*/'rainlab.user::lang.account.activation_email_sent'));
 
             $this->sendActivationEmail($user);
+
         }
         catch (Exception $ex) {
-            $this->throwOrFlashError($ex);
+            if (Request::ajax()) throw $ex;
+            else Flash::error($ex->getMessage());
         }
 
-        // Redirect
+        /*
+         * Redirect
+         */
         if ($redirect = $this->makeRedirection()) {
             return $redirect;
         }
@@ -636,26 +675,5 @@ class Account extends ComponentBase
             'username' => Lang::get('rainlab.user::lang.user.username'),
             'name' => Lang::get('rainlab.user::lang.account.full_name')
         ];
-    }
-
-    /**
-     * throwOrFlashError is error logic used by older versions before postback
-     * handlers internally supported flash messages for safe exceptions.
-     */
-    protected function throwOrFlashError($ex)
-    {
-        // v3.4 handles postback flash logic internally and more accurately
-        // so just throw the exception when using v3.4 or above
-        if (version_compare(System::VERSION, '3.4', '>=')) {
-            throw $ex;
-        }
-
-        // AJAX request or ajaxHandler twig call
-        if (Request::ajax() || !post('_handler')) {
-            throw $ex;
-        }
-
-        // Assumed postback handler, exception ignored
-        Flash::error($ex->getMessage());
     }
 }

@@ -23,53 +23,41 @@ class Session extends ComponentBase
     const ALLOW_GUEST = 'guest';
     const ALLOW_USER = 'user';
 
-    /**
-     * componentDetails
-     */
     public function componentDetails()
     {
         return [
-            'name' => 'rainlab.user::lang.session.session',
+            'name'        => 'rainlab.user::lang.session.session',
             'description' => 'rainlab.user::lang.session.session_desc'
         ];
     }
 
-    /**
-     * defineProperties
-     */
     public function defineProperties()
     {
         return [
             'security' => [
-                'title' => 'rainlab.user::lang.session.security_title',
+                'title'       => 'rainlab.user::lang.session.security_title',
                 'description' => 'rainlab.user::lang.session.security_desc',
-                'type' => 'dropdown',
-                'default' => 'all',
-                'options' => [
-                    'all' => 'rainlab.user::lang.session.all',
-                    'user' => 'rainlab.user::lang.session.users',
+                'type'        => 'dropdown',
+                'default'     => 'all',
+                'options'     => [
+                    'all'   => 'rainlab.user::lang.session.all',
+                    'user'  => 'rainlab.user::lang.session.users',
                     'guest' => 'rainlab.user::lang.session.guests'
                 ]
             ],
             'allowedUserGroups' => [
-                'title' => 'rainlab.user::lang.session.allowed_groups_title',
+                'title'       => 'rainlab.user::lang.session.allowed_groups_title',
                 'description' => 'rainlab.user::lang.session.allowed_groups_description',
                 'placeholder' => '*',
-                'type' => 'set',
-                'default' => []
+                'type'        => 'set',
+                'default'     => []
             ],
             'redirect' => [
-                'title' => 'rainlab.user::lang.session.redirect_title',
+                'title'       => 'rainlab.user::lang.session.redirect_title',
                 'description' => 'rainlab.user::lang.session.redirect_desc',
-                'type' => 'dropdown',
-                'default' => ''
-            ],
-            'checkToken' => [
-                'title' => /*Use token authentication*/'rainlab.user::lang.session.check_token',
-                'description' => /*Check authentication using a verified bearer token.*/'rainlab.user::lang.session.check_token_desc',
-                'type' => 'checkbox',
-                'default' => 0
-            ],
+                'type'        => 'dropdown',
+                'default'     => ''
+            ]
         ];
     }
 
@@ -90,15 +78,10 @@ class Session extends ComponentBase
     }
 
     /**
-     * init component
+     * Component is initialized.
      */
     public function init()
     {
-        // Login with token
-        if ($this->property('checkToken', false)) {
-            $this->authenticateWithBearerToken();
-        }
-
         // Inject security logic pre-AJAX
         $this->controller->bindEvent('page.init', function() {
             if (Request::ajax() && ($redirect = $this->checkUserSecurityRedirect())) {
@@ -120,7 +103,7 @@ class Session extends ComponentBase
     }
 
     /**
-     * user returns the logged in user, if available, and touches
+     * Returns the logged in user, if available, and touches
      * the last seen timestamp.
      * @return RainLab\User\Models\User
      */
@@ -138,14 +121,6 @@ class Session extends ComponentBase
     }
 
     /**
-     * token returns an authentication token
-     */
-    public function token()
-    {
-        return Auth::getBearerToken();
-    }
-
-    /**
      * Returns the previously signed in user when impersonating.
      */
     public function impersonator()
@@ -154,7 +129,7 @@ class Session extends ComponentBase
     }
 
     /**
-     * onLogout logs out the user
+     * Log out the user
      *
      * Usage:
      *   <a data-request="onLogout">Sign out</a>
@@ -246,15 +221,5 @@ class Session extends ComponentBase
         }
 
         return true;
-    }
-
-    /**
-     * authenticateWithBearerToken
-     */
-    protected function authenticateWithBearerToken()
-    {
-        if ($jwtToken = Request::bearerToken()) {
-            Auth::checkBearerToken($jwtToken);
-        }
     }
 }

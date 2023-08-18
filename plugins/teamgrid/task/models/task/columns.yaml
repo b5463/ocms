@@ -1,0 +1,32 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        searchable: true
+
+    name: 
+        label: Name
+        searchable: true
+
+    user_name: 
+        label: User Name
+        relation: user
+        select: name
+        searchable: true
+
+    project_name: 
+        label: Project Name
+        relation: project
+        select: name
+        searchable: true
+
+    tracked_time:
+        label: Tracked Time
+        type: number
+
+    is_done:
+        label: Done 
+        type: switch

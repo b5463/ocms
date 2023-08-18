@@ -1,0 +1,31 @@
+# ===================================
+# List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        searchable: true
+
+    name:
+        label: Name
+        searchable: true
+
+    description:
+        label: Description
+
+    customer_name:
+        label: Customer Name
+        relation: customer
+        select: name
+        searchable: true
+
+    project_manager_name:
+        label: Project Manager Name
+        relation: projectManager
+        select: name
+        searchable: true
+
+    is_done:
+        label: Done
+        type: switch

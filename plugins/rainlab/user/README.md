@@ -4,8 +4,7 @@ Front-end user management for October CMS.
 
 ## Requirements
 
-- October CMS 3.0 or above
-- The [AJAX Framework](https://octobercms.com/docs/cms/ajax) to be included in your layout/page
+This plugin requires the [Ajax Framework](https://octobercms.com/docs/cms/ajax) to be included in your layout/page in order to handle form requests.
 
 ## Installation Instructions
 
@@ -21,19 +20,13 @@ To uninstall this plugin:
 php artisan plugin:remove RainLab.User
 ```
 
-If you are using October CMS v1 or v2, install v1.7 with the following commands:
-
-```bash
-composer require rainlab/user-plugin "^1.7"
-```
-
-## Managing Users
+## Managing users
 
 Users are managed on the Users tab found in the back-end. Each user provides minimal data fields - **Name**, **Surname**, **Email** and **Password**. The Name can represent either the person's first name or their full name, making the Surname field optional, depending on the complexity of your site.
 
 Below the **Email** field is an checkbox to block all outgoing mail sent to the user. This is a useful feature for accounts with an email address that is bouncing mail or has reported spam. When checked, no mail will ever be sent to this address, except for the mail template used for resetting the password.
 
-## Plugin Settings
+## Plugin settings
 
 This plugin creates a Settings menu item, found by navigating to **Settings > Users > User settings**. This page allows the setting of common features, described in more detail below.
 
@@ -55,7 +48,7 @@ You can allow users to sign in without activating by switching **Sign in require
 
 Users have the ability to resend the activation email by clicking **Send the verification email again** found in the Account component.
 
-#### Sign In
+#### Sign in
 
 By default a User will sign in to the site using their email address as a unique identifier. You may use a unique login name instead by changing the **Login attribute** value to Username. This will introduce a new field called **Username** for each user, allowing them to specify their own short name or alias for identification. Both the Email address and Username must be unique to the user.
 
@@ -77,389 +70,254 @@ This feature is implemented by the Notify plugin. How to use this feature:
 - Here you may select the Mail template previously defined in the user settings.
 - Click **Save**
 
-## Extended Features
+## Extended features
 
 For extra functionality, consider also installing the [User Plus+ plugin](http://octobercms.com/plugin/rainlab-userplus) (`RainLab.UserPlus`).
 
-## Session Component
+## Session component
 
 The session component should be added to a layout that has registered users. It has no default markup.
 
-### User Variable
+### User variable
 
 You can check the logged in user by accessing the **{{ user }}** Twig variable:
 
-```twig
-{% if user %}
-    <p>Hello {{ user.name }}</p>
-{% else %}
-    <p>Nobody is logged in</p>
-{% endif %}
-```
+    {% if user %}
+        <p>Hello {{ user.name }}</p>
+    {% else %}
+        <p>Nobody is logged in</p>
+    {% endif %}
 
-### Signing Out
+### Signing out
 
 The Session component allows a user to sign out of their session.
 
-```html
-<a data-request="onLogout" data-request-data="redirect: '/good-bye'">Sign out</a>
-```
+    <a data-request="onLogout" data-request-data="redirect: '/good-bye'">Sign out</a>
 
-### Page Restriction
+### Page restriction
 
 The Session component allows the restriction of a page or layout by allowing only signed in users, only guests or no restriction. This example shows how to restrict a page to users only:
 
-```ini
-title = "Restricted page"
-url = "/users-only"
+    title = "Restricted page"
+    url = "/users-only"
 
-[session]
-security = "user"
-redirect = "home"
-```
+    [session]
+    security = "user"
+    redirect = "home"
 
 The `security` property can be user, guest or all. The `redirect` property refers to a page name to redirect to when access is restricted.
 
-### Route Restriction
+### Route restriction
 
 Access to routes can be restricted by applying the `AuthMiddleware`.
 
-```php
-Route::group(['middleware' => \RainLab\User\Classes\AuthMiddleware::class], function () {
-    // All routes here will require authentication
-});
-```
+    Route::group(['middleware' => 'RainLab\User\Classes\AuthMiddleware'], function () {
+        // All routes here will require authentication
+    });
 
-### Token Variable
-
-The `token` Twig variable can be used for generating a new bearer token for the signed in user.
-
-```twig
-{% do response(
-    ajaxHandler('onSignin').withVars({
-        token: session.token()
-    })
-) %}
-```
-
-The `checkToken` property of the component is used to verify a supplied token in the request headers `(Authorization: Bearer <TOKEN>)`.
-
-```ini
-[session]
-checkToken = 1
-```
-
-## Account Component
+## Account component
 
 The account component provides a user sign in form, registration form, activation form and update form. To display the form:
 
-```ini
-title = "Account"
-url = "/account/:code?"
+    title = "Account"
+    url = "/account/:code?"
 
-[account]
-redirect = "home"
-paramCode = "code"
-==
-{% component 'account' %}
-```
+    [account]
+    redirect = "home"
+    paramCode = "code"
+    ==
+    {% component 'account' %}
 
 If the user is logged out, this will display a sign in and registration form. Otherwise, it will display an update form. The `redirect` property is the page name to redirect to after the submit process is complete. The `paramCode` is the URL routing code used for activating the user, only used if the feature is enabled.
 
-## Reset Password Component
+## Reset Password component
 
 The reset password component allows a user to reset their password if they have forgotten it.
 
-```ini
-title = "Forgotten your password?"
-url = "/forgot-password/:code?"
+    title = "Forgotten your password?"
+    url = "/forgot-password/:code?"
 
-[resetPassword]
-paramCode = "code"
-==
-{% component 'resetPassword' %}
-```
+    [resetPassword]
+    paramCode = "code"
+    ==
+    {% component 'resetPassword' %}
 
 This will display the initial restoration request form and also the password reset form used after the verification email has been received by the user. The `paramCode` is the URL routing code used for resetting the password.
 
-## Using a Login Name
+## Using a login name
 
 By default the User plugin will use the email address as the login name. To switch to using a user defined login name, navigate to the backend under System > Users > User Settings and change the Login attribute under the Sign in tab to be **Username**. Then simply ask for a username upon registration by adding the username field:
 
-```twig
-<form data-request="onRegister">
-    <label>Full Name</label>
-    <input name="name" type="text" placeholder="Enter your full name">
+    <form data-request="onRegister">
+        <label>Full Name</label>
+        <input name="name" type="text" placeholder="Enter your full name">
 
-    <label>Email</label>
-    <input name="email" type="email" placeholder="Enter your email">
+        <label>Email</label>
+        <input name="email" type="email" placeholder="Enter your email">
 
-    <label>Username</label>
-    <input name="username" placeholder="Pick a login name">
+        <label>Username</label>
+        <input name="username" placeholder="Pick a login name">
 
-    <label>Password</label>
-    <input name="password" type="password" placeholder="Choose a password">
+        <label>Password</label>
+        <input name="password" type="password" placeholder="Choose a password">
 
-    <button type="submit">Register</button>
-</form>
-```
+        <button type="submit">Register</button>
+    </form>
 
 We can add any other additional fields here too, such as `phone`, `company`, etc.
 
-## Password Length Requirements
+## Password length requirements
 
 By default, the User plugin requires a minimum password length of 8 characters for all users when registering or changing their password. You can change this length requirement by going to backend and navigating to System > Users > User Settings. Inside the Registration tab, a **Minimum password length** field is provided, allowing you to increase or decrease this limit to your preferred length.
 
-## Error Handling
+## Error handling
 
-### Flash Messages
+### Flash messages
 
 This plugin makes use of October's [`Flash API`](http://octobercms.com/docs/markup/tag-flash). In order to display the error messages, you need to place the following snippet in your layout or page.
 
-```twig
-{% flash %}
-    <div class="alert alert-{{ type == 'error' ? 'danger' : type }}">{{ message }}</div>
-{% endflash %}
-```
+    {% flash %}
+        <div class="alert alert-{{ type == 'error' ? 'danger' : type }}">{{ message }}</div>
+    {% endflash %}
 
-### AJAX Errors
+### AJAX errors
 
 The User plugin displays AJAX error messages in a simple ``alert()``-box by default. However, this might scare non-technical users. You can change the default behavior of an AJAX error from displaying an ``alert()`` message, like this:
 
-```js
-<script>
-    $(window).on('ajaxErrorMessage', function (event, message){
+    <script>
+        $(window).on('ajaxErrorMessage', function (event, message){
 
-        // This can be any custom JavaScript you want
-        alert('Something bad happened, mate, here it is: ' + message);
+            // This can be any custom JavaScript you want
+            alert('Something bad happened, mate, here it is: ' + message);
 
-        // This will stop the default alert() message
-        event.preventDefault();
+            // This will stop the default alert() message
+            event.preventDefault();
 
-    })
-</script>
-```
+        })
+    </script>
 
-### Checking Email/Username Availability
+### Checking if a login name is already taken
 
 Here is a simple example of how you can quickly check if an email address / username is available in your registration forms. First, inside the page code, define the following AJAX handler to check the login name, here we are using the email address:
 
-```php
-public function onCheckEmail()
-{
-    return ['isTaken' => Auth::findUserByLogin(post('email')) ? 1 : 0];
-}
-```
+    public function onCheckEmail()
+    {
+        return ['isTaken' => Auth::findUserByLogin(post('email')) ? 1 : 0];
+    }
 
 For the email input we use the `data-request` and `data-track-input` attributes to call the `onCheckEmail` handler any time the field is updated. The `data-request-success` attribute will call some jQuery code to toggle the alert box.
 
-```html
-<div class="form-group">
-    <label>Email address</label>
-    <input
-        name="email"
-        type="email"
-        class="form-control"
-        data-request="onCheckEmail"
-        data-request-success="$('#loginTaken').toggle(!!data.isTaken)"
-        data-track-input />
-</div>
+    <div class="form-group">
+        <label>Email address</label>
+        <input
+            name="email"
+            type="email"
+            class="form-control"
+            data-request="onCheckEmail"
+            data-request-success="$('#loginTaken').toggle(!!data.isTaken)"
+            data-track-input />
+    </div>
 
-<div id="loginTaken" class="alert alert-danger" style="display: none">
-    Sorry, that login name is already taken.
-</div>
-```
+    <div id="loginTaken" class="alert alert-danger" style="display: none">
+        Sorry, that login name is already taken.
+    </div>
 
-## Overriding Functionality
+## Overriding functionality
 
 Here is how you would override the `onSignin()` handler to log any error messages. Inside the page code, define this method:
 
-```php
-function onSignin()
-{
-    try {
-        return $this->account->onSignin();
+    function onSignin()
+    {
+        try {
+            return $this->account->onSignin();
+        }
+        catch (Exception $ex) {
+            Log::error($ex);
+        }
     }
-    catch (Exception $ex) {
-        Log::error($ex);
-    }
-}
-```
 
 Here the local handler method will take priority over the **account** component's event handler. Then we simply inherit the logic by calling the parent handler manually, via the component object (`$this->account`).
 
-## Auth Facade
+## Auth facade
 
 There is an `Auth` facade you may use for common tasks, it primarily inherits the `October\Rain\Auth\Manager` class for functionality.
 
 You may use `Auth::register` to register an account:
 
-```php
-$user = Auth::register([
-    'name' => 'Some User',
-    'email' => 'some@website.tld',
-    'password' => 'changeme',
-    'password_confirmation' => 'changeme',
-]);
-```
+    $user = Auth::register([
+        'name' => 'Some User',
+        'email' => 'some@website.tld',
+        'password' => 'changeme',
+        'password_confirmation' => 'changeme',
+    ]);
 
 The second argument can specify if the account should be automatically activated:
 
-```php
-// Auto activate this user
-$user = Auth::register([...], true);
-```
+    // Auto activate this user
+    $user = Auth::register([...], true);
 
 The `Auth::check` method is a quick way to check if the user is signed in.
 
-```php
-// Returns true if signed in.
-$loggedIn = Auth::check();
-```
+    // Returns true if signed in.
+    $loggedIn = Auth::check();
 
 To return the user model that is signed in, use `Auth::getUser` instead.
 
-```php
-// Returns the signed in user
-$user = Auth::getUser();
-```
+    // Returns the signed in user
+    $user = Auth::getUser();
 
 You may authenticate a user by providing their login and password with `Auth::authenticate`.
 
-```php
-// Authenticate user by credentials
-$user = Auth::authenticate([
-    'login' => post('login'),
-    'password' => post('password')
-]);
-```
+    // Authenticate user by credentials
+    $user = Auth::authenticate([
+        'login' => post('login'),
+        'password' => post('password')
+    ]);
 
 The second argument is used to store a non-expire cookie for the user.
 
-```php
-$user = Auth::authenticate([...], true);
-```
+    $user = Auth::authenticate([...], true);
 
 You can also authenticate as a user simply by passing the user model along with `Auth::login`.
 
-```php
-// Sign in as a specific user
-Auth::login($user);
-```
+    // Sign in as a specific user
+    Auth::login($user);
 
 The second argument is the same.
 
-```php
-// Sign in and remember the user
-Auth::login($user, true);
-```
+    // Sign in and remember the user
+    Auth::login($user, true);
 
 You may look up a user by their login name using the `Auth::findUserByLogin` method.
 
-```php
-$user = Auth::findUserByLogin('some@email.tld');
-```
+    $user = Auth::findUserByLogin('some@email.tld');
 
-When working with authentication via bearer tokens, the `Auth::getBearerToken` method can be used to obtain a bearer token (JWT) for the current user. It expires after 1 hour by default.
-
-```php
-$token = Auth::getBearerToken();
-```
-
-The `Auth::checkBearerToken` method is used to verify a supplied token and authenticate the user. The method returns `true` if the verification was successful.
-
-```php
-if ($jwtToken = Request::bearerToken()) {
-    Auth::checkBearerToken($jwtToken);
-}
-```
-
-## Guest Users
+## Guest users
 
 Creating a guest user allows the registration process to be deferred. For example, making a purchase without needing to register first. Guest users are not able to sign in and will be added to the user group with the code `guest`.
 
 Use the `Auth::registerGuest` method to create a guest user, it will return a user object and can be called multiple times. The unique identifier is the email address, which is a required field.
 
-```php
-$user = Auth::registerGuest(['email' => 'person@acme.tld']);
-```
+    $user = Auth::registerGuest(['email' => 'person@acme.tld']);
 
 When a user registers with the same email address using the `Auth::register` method, they will inherit the existing guest user account.
 
-```php
-// This will not throw an "Email already taken" error
-$user = Auth::register([
-    'email' => 'person@acme.tld',
-    'password' => 'changeme',
-    'password_confirmation' => 'changeme',
-]);
-```
+    // This will not throw an "Email already taken" error
+    $user = Auth::register([
+        'email' => 'person@acme.tld',
+        'password' => 'changeme',
+        'password_confirmation' => 'changeme',
+    ]);
 
 > **Important**: If you are using guest accounts, it is important to disable sensitive functionality for user accounts that are not verified, since it may be possible for anyone to inherit a guest account.
 
 You may also convert a guest to a registered user with the `convertToRegistered` method. This will generate a random password and sends an invitation using the `rainlab.user::mail.invite` template.
 
-```php
-$user->convertToRegistered();
-```
+    $user->convertToRegistered();
 
 To disable the notification and password reset, pass the first argument as false.
 
-```php
-$user->convertToRegistered(false);
-```
-
-## Working with APIs
-
-When [building API endpoints using CMS pages](https://docs.octobercms.com/3.x/cms/resources/building-apis.html) it can be useful to use a page for handling the authentication logic. The following is a simple example that includes various API endpoints.
-
-```twig
-title = "User API Page"
-url = "/api/user/:action"
-
-[resetPassword]
-[account]
-[session]
-checkToken = 1
-==
-{% if this.param.action == 'signin' %}
-    {% do response(
-        ajaxHandler('onSignin').withVars({
-            token: session.token()
-        })
-    ) %}
-{% endif %}
-
-{% if this.param.action == 'register' %}
-    {% do response(ajaxHandler('onRegister')) %}
-{% endif %}
-
-{% if this.param.action == 'logout' %}
-    {% do response(ajaxHandler('onLogout')) %}
-{% endif %}
-
-{% if this.param.action == 'refresh' %}
-    {% do response({ data: {
-        token: session.token()
-    }}) %}
-{% endif %}
-```
-
-An API layout to verify the user can be used for other API endpoints.
-
-```twig
-description = "Auth API Layout"
-is_priority = 1
-
-[session]
-checkToken = 1
-==
-{% if session.user %}
-    {% page %}
-{% else %}
-    {% do abort(403, 'Access Denied') %}
-{% endif %}
-```
+    $user->convertToRegistered(false);
 
 ## Events
 
@@ -478,34 +336,30 @@ This plugin will fire some global events that can be useful for interacting with
 
 Here is an example of hooking an event:
 
-```php
-Event::listen('rainlab.user.deactivate', function($user) {
-    // Hide all posts by the user
-});
-```
+    Event::listen('rainlab.user.deactivate', function($user) {
+        // Hide all posts by the user
+    });
 
 A common requirement is to adapt another to a legacy authentication system. In the example below, the `WordPressLogin::check` method would check the user password using an alternative hashing method, and if successful, update to the new one used by October.
 
-```php
-Event::listen('rainlab.user.beforeAuthenticate', function($component, $credentials) {
-    $login = array_get($credentials, 'login');
-    $password = array_get($credentials, 'password');
+    Event::listen('rainlab.user.beforeAuthenticate', function($component, $credentials) {
+        $login = array_get($credentials, 'login');
+        $password = array_get($credentials, 'password');
 
-    // No such user exists
-    if (!$user = Auth::findUserByLogin($login)) {
-        return;
-    }
+        /*
+         * No such user exists
+         */
+        if (!$user = Auth::findUserByLogin($login)) {
+            return;
+        }
 
-    // The user is logging in with their old WordPress account
-    // for the first time. Rehash their password using the new
-    // October system.
-    if (WordPressLogin::check($user->password, $password)) {
-        $user->password = $user->password_confirmation = $password;
-        $user->forceSave();
-    }
-});
-```
-
-### License
-
-This plugin is an official extension of the October CMS platform and is free to use if you have a platform license. See [EULA license](LICENSE.md) for more details.
+        /*
+         * The user is logging in with their old WordPress account
+         * for the first time. Rehash their password using the new
+         * October system.
+         */
+        if (WordPressLogin::check($user->password, $password)) {
+            $user->password = $user->password_confirmation = $password;
+            $user->forceSave();
+        }
+    });

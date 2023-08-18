@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Time Entry
+
+# Model Form Field configuration
+form: $/teamgrid/timeentry/models/timeentry/fields.yaml
+
+# Model Class name
+modelClass: Teamgrid\TimeEntry\Models\TimeEntry
+
+# Default redirect location
+defaultRedirect: teamgrid/timeentry/timeentries
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: teamgrid/timeentry/timeentries/update/:id
+    redirectClose: teamgrid/timeentry/timeentries
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: teamgrid/timeentry/timeentries
+    redirectClose: teamgrid/timeentry/timeentries
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

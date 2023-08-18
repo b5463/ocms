@@ -1,0 +1,52 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name: 
+        label: Name
+        type: text
+
+    user: 
+        label: User
+        type: recordfinder
+        list: ~/plugins/rainlab/user/models/user/columns.yaml
+        prompt: Click the Find button to find a user
+
+    project:
+        label: Project 
+        type: recordfinder
+        list: ~/plugins/teamgrid/project/models/project/columns.yaml
+        prompt: Click the Find button to find a project
+
+    planned_start:
+        label: Planned start
+        type: datepicker
+        mode: date
+
+    planned_end:
+        label: Planned end
+        type: datepicker
+        mode: date
+
+    due_date:
+        label: Due date
+        type: datepicker
+
+    planned_time:
+        label: Planned time
+        type: datepicker
+        mode: time
+
+    tags:
+        label: Tags
+        type: taglist
+
+    description:
+        label: Descrption
+        type: textarea
+        size: large
+
+    is_done:
+        label: Done
+        type: switch

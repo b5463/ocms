@@ -1,0 +1,58 @@
+# ===================================
+# Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: Name
+        type: text
+
+    description:
+        label: Description
+        type: textarea
+        size: large
+
+    customer:
+        label: Customer
+        type: recordfinder
+        list: ~/plugins/rainlab/user/models/user/columns.yaml
+        prompt: Click the Find button to find a user
+
+    projectManager:
+        label: Project Manager
+        type: recordfinder
+        list: ~/plugins/rainlab/user/models/user/columns.yaml
+        prompt: Click the Find button to find a user
+
+    due_date:
+        label: Due Date
+        type: datepicker
+
+    accounting:
+        label: Accounting
+        type: dropdown
+        default: disabled
+        options:
+            disabled: Disabled
+            service_hourly_rate: Service Hourly Rate
+            person_hourly_rate: Person Hourly Rate
+            hourly_rate: Hourly
+
+    hourly_rate_price:
+        label: Hourly Rate
+        type: number
+
+    budget:
+        label: Budget
+        type: dropdown
+        default: disabled
+        options:
+            disabled: Disabled
+            total_hours: Total Hours
+            total_fees: Total Fees
+            hours_per_month: Hours Per Month
+            fees_per_month: Fees Per Month
+
+    is_done:
+        label: Done
+        type: switch

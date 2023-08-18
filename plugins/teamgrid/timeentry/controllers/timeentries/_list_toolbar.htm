@@ -1,0 +1,44 @@
+<div data-control="toolbar">
+    <a href="<?= Backend::url('teamgrid/timeentry/timeentries/create') ?>" class="btn btn-primary oc-icon-plus">
+        New Time Entry
+    </a>
+
+    <button
+        class="btn btn-danger oc-icon-trash-o"
+        disabled="disabled"
+        onclick="handleDeleteButtonClick()"
+        data-trigger-action="enable"
+        data-trigger=".control-list input[type=checkbox]"
+        data-trigger-condition="checked"
+        data-stripe-load-indicator>
+        Delete selected
+    </button>
+</div>
+
+<script>
+    function handleDeleteButtonClick() {
+        var checkedItems = $('.control-list').listWidget('getChecked');
+        
+        if (checkedItems.length > 0) {
+            if (confirm("Are you sure you want to delete the selected Time Entries?")) {
+                performDelete(checkedItems);
+            }
+        } else {
+            alert("Please select at least one Time Entry to delete.");
+        }
+    }
+
+    function performDelete(items) {
+        var deleteButton = $('.btn-danger.oc-icon-trash-o');
+        
+        $.request('onDelete', {
+            data: { checked: items },
+            success: function () {
+                deleteButton.prop('disabled', true);
+            },
+            error: function () {
+                alert("An error occurred while deleting Time Entries.");
+            }
+        });
+    }
+</script>

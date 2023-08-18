@@ -74,7 +74,6 @@ return [
         'activation_tab' => 'Activation',
         'signin_tab' => 'Sign in',
         'registration_tab' => 'Registration',
-        'password_policy_tab' => 'Password Policy',
         'profile_tab' => 'Profile',
         'notifications_tab' => 'Notifications',
         'allow_registration' => 'Allow user registration',
@@ -102,14 +101,6 @@ return [
         'remember_always' => 'Always',
         'remember_never' => 'Never',
         'remember_ask' => 'Ask the user on login',
-        'min_password_length' => 'Min password length',
-        'min_password_length_comment' => 'Password length required for users',
-        'require_mixed_case' => 'Require mixed case',
-        'require_mixed_case_comment' => 'Require uppercase and lowercase letters',
-        'require_number' =>  'Require number',
-        'require_symbol' => 'Require special character',
-        'require_uncompromised' => 'Require uncompromised',
-        'require_uncompromised_comment' => 'Require non-leaked password',
     ],
     'user' => [
         'label' => 'User',
@@ -233,7 +224,5 @@ return [
         'redirect_desc' => 'Page name to redirect if access is denied.',
         'logout' => 'You have been successfully logged out!',
         'stop_impersonate_success' => 'You are no longer impersonating a user.',
-        'check_token' => 'Use token authentication',
-        'check_token_desc' => 'Check this box to allow authentication using a bearer token.',
     ]
 ];
