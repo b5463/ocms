@@ -27,7 +27,6 @@ class TaskResource extends JsonResource
                 'done'              => $this->is_done,
             ];
         } catch (\Exception $e) {
-            // Handle any exceptions that may occur while processing the resource
             return [
                 'error' => 'An error occurred while processing the resource',
             ];

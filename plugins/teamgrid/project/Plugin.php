@@ -4,6 +4,8 @@ namespace Teamgrid\Project;
 
 use Backend;
 use System\Classes\PluginBase;
+use Teamgrid\Project\Classes\Extend\UserExtend as UserExtend;
+use Teamgrid\Project\Classes\RelationManager\UserProjectRelationManager as UserProjectRelationManager;
 
 /**
  * Project Plugin Information File
@@ -42,8 +44,17 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
-        // Any boot-up logic can be placed here
-    }
+        try {
+            $userModel = \RainLab\User\Models\User::class;
+            UserExtend::extendUserWithDynamicMethods();
+            $userModel::extend(function ($model) {
+                UserExtend::extendUser_addProjectsRelation();
+                UserProjectRelationManager::extendRelationManagerFields($model);
+            });
+        } catch (\Exception $e) {
+            \Log::error('An error occurred in plugin boot: ' . $e->getMessage());
+        }
+    } 
 
     /**
      * Registers any front-end components implemented in this plugin.

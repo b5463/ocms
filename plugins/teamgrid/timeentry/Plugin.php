@@ -4,6 +4,8 @@ namespace Teamgrid\TimeEntry;
 
 use Backend;
 use System\Classes\PluginBase;
+use Teamgrid\TimeEntry\Classes\Extend\UserExtend as UserExtend;
+use Teamgrid\TimeEntry\Classes\RelationManager\UserTimeEntryRelationManager as UserTimeEntryRelationManager;
 
 /**
  * TimeEntry Plugin Information File
@@ -42,8 +44,17 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
-        // Plugin boot logic if needed
-    }
+        try {
+            $userModel = \RainLab\User\Models\User::class;
+            UserExtend::extendUserWithDynamicMethods();
+            $userModel::extend(function ($model) {
+                UserExtend::extendUser_addTimeEntriesRelation();
+                UserTimeEntryRelationManager::extendRelationManagerFields($model);
+            });
+        } catch (\Exception $e) {
+            \Log::error('An error occurred in plugin boot: ' . $e->getMessage());
+        }
+    } 
 
     /**
      * Registers any front-end components implemented in this plugin.

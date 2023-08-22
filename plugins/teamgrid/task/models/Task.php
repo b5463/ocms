@@ -14,13 +14,12 @@ class Task extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
-    // Define the relationships for the model
     public $belongsTo = [
-        'project' => [Project::class], // Use imported Project class
-        'user' => [User::class], // Use imported User class
+        'project' => [Project::class],
+        'user' => [User::class],
     ];
     public $hasMany = [
-        'timeEntries' => [TimeEntry::class], // Use imported TimeEntry class
+        'timeEntries' => [TimeEntry::class],
     ]; 
 
     // Define an attribute accessor to calculate tracked time

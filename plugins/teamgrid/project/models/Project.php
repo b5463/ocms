@@ -17,16 +17,16 @@ class Project extends Model
      * @var array Belongs-to relationships
      */
     public $belongsTo = [
-        'projectManager' => [User::class], // Use imported User model
-        'customer' => [User::class], // Use imported User model
+        'projectManager' => [Project::class, 'key' => 'project_manager_id'],
+        'customer' => [Project::class, 'key' => 'customer_id'],
     ];
     
     /**
      * @var array Has-many relationships
      */
     public $hasMany = [
-        'tasks' => [Task::class], // Use imported Task model
-        'accountingPeople' => [User::class], // Use imported User model
+        'tasks' => [Task::class],
+        'accountingPeople' => [User::class],
     ];
 
     /**
@@ -80,7 +80,6 @@ class Project extends Model
     public $hasOne = [];
     public $hasOneThrough = [];
     public $hasManyThrough = [];
-    public $belongsToMany = [];
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];

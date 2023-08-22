@@ -3,6 +3,7 @@
 # ===================================
 
 fields:
+
     name:
         label: Name
         type: text

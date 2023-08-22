@@ -15,8 +15,8 @@ class TimeEntry extends Model
     use \October\Rain\Database\Traits\Validation;
 
     public $belongsTo = [
-        "task" => [Task::class],
-        "user" => [User::class],
+        'task' => [Task::class],
+        'user' => [User::class],
     ];
 
     public function beforeSave()
@@ -48,7 +48,7 @@ class TimeEntry extends Model
      */
     public $rules = [
         'task' => 'required',
-        'user' => 'required'
+        'user' => 'required',
     ];
 
     /**
@@ -76,7 +76,7 @@ class TimeEntry extends Model
      */
     protected $dates = [
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     /**

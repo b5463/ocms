@@ -2,7 +2,8 @@
 
 use Backend;
 use System\Classes\PluginBase;
-
+use Teamgrid\Task\Classes\Extend\UserExtend as UserExtend;
+use Teamgrid\Task\Classes\RelationManager\UserTaskRelationManager as UserTaskRelationManager;
 /**
  * Task Plugin Information File
  */
@@ -40,8 +41,17 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
-        // Code to execute during plugin boot
-    }
+        try {
+            $userModel = \RainLab\User\Models\User::class;
+            UserExtend::extendUserWithDynamicMethods();
+            $userModel::extend(function ($model) {
+                UserExtend::extendUser_addTasksRelation();
+                UserTaskRelationManager::extendRelationManagerFields($model);
+            });
+        } catch (\Exception $e) {
+            \Log::error('An error occurred in plugin boot: ' . $e->getMessage());
+        }
+    }    
 
     /**
      * Registers any front-end components implemented in this plugin.
